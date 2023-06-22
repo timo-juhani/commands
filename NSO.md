@@ -28,6 +28,12 @@ ncs —status | grep status
 
 # Enter CLI
 ncs_cli -u admin -C
+
+# Navigation
+config
+top 
+end
+exit
 ```
 
 ## Devices
@@ -111,6 +117,10 @@ show running-config devices device internet-rtr01 config interface | display jso
 # Interface IP addresses
 # NSO allows using wildcards in commands
 show running-config devices device dist-sw01 config interface Vlan * ip address
+# XML format
+show configuration | display xml
+show full-configuration devices device ios1 config | display xml
+
 ````
 
 ### Update Configuration
@@ -120,27 +130,10 @@ show running-config devices device dist-sw01 config interface Vlan * ip address
 devices device ios0 config
 # Verify the path
 pwd
+# Enter configuration changes and commit
 
-````
-
-## Configuration
-
-### Change
-
-````
 # Configure multiple devices simultaneously
 devices device * config ios:enable password magic
-````
-
-### View
-
-````
-# Native
-show full-configuration devices device ios1 config
-# XML
-show full-configuration devices device ios1 config | display xml
-# Configuration changes during this session
-show configuration
 ````
 
 ## Commit Changes
@@ -151,15 +144,6 @@ commit dry-run outformat native
 # Apply changes
 commit
 ```
-
-## Navigation
-
-````
-# Return top level context
-top
-# Return from config mode
-end
-````
 
 ## Services
 
