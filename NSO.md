@@ -2,9 +2,25 @@
 
 ## Installation
 
+````
+# Unpack Linux binary
+sh nso.bin
+
+# Create a NSO instance (local setup)
+source ~/nso/ncsrc
+ncs-setup \
+--package nso/packages/neds/cisco-nx-cli-5.23 \
+--package nso/packages/neds/cisco-asa-cli-6.6 \
+--package nso/packages/neds/cisco-ios-cli-6.91 \
+--package nso/packages/neds/cisco-iosxr-cli-7.45 \
+--dest nso-instance
+cd ~/nso-instance
+````
+
 ## Launch NSO
 
 ```
+cd ~/nso-instance
 ncs
 
 # Check NSO status
@@ -13,6 +29,12 @@ ncs —status | grep status
 # Enter CLI
 ncs_cli -u admin -C
 ```
+
+## Device Authentication
+
+````
+
+````
 
 ## Device Synchronization
 
