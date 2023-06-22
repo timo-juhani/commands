@@ -99,6 +99,20 @@ device-group HUBS
 devices device-group ALL check-sync
 ````
 
+### View Configuration
+
+````
+# Device configuration
+show running-config devices device internet-rtr01 config
+show running-config devices device internet-rtr01 | de-select config
+# Interfaces
+show running-config devices device internet-rtr01 config interface
+show running-config devices device internet-rtr01 config interface | display json
+# Interface IP addresses
+# NSO allows using wildcards in commands
+show running-config devices device dist-sw01 config interface Vlan * ip address
+````
+
 ## Configuration
 
 ### Set Level
