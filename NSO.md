@@ -30,13 +30,38 @@ ncs —status | grep status
 ncs_cli -u admin -C
 ```
 
-## Device Authentication
+## Devices
+
+### Authentication Credentials
 
 ````
-
+# Create an authentication group
+devices authgroups group labadmin
+# Set the credentials
+default-map remote-name cisco
+default-map remote-password cisco
+default-map remote-secondary-password cisco
 ````
 
-## Device Synchronization
+### Add Devices
+
+````
+# Name the device
+devices device edge-sw01
+# Management IP address 
+address 10.10.20.172
+# Authentication credentials
+authgroup labadmin
+# NED type
+device-type cli ned-id cisco-ios-cli-6.67
+# Remote command protocol
+device-type cli protocol ssh
+# Not the most secure way to go
+ssh host-key-verification none
+# Consider using SSH keys for authentication
+````
+
+### Device Synchronization
 
 ```
 # Check for sync
