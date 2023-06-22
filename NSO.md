@@ -113,15 +113,17 @@ show running-config devices device internet-rtr01 config interface | display jso
 show running-config devices device dist-sw01 config interface Vlan * ip address
 ````
 
-## Configuration
+### Update Configuration
 
-### Set Level
-```
-# Global
-config
-# Device
+````
+# Enter device configuration mode
 devices device ios0 config
-```
+# Verify the path
+pwd
+
+````
+
+## Configuration
 
 ### Change
 
