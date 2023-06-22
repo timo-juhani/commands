@@ -59,6 +59,15 @@ device-type cli protocol ssh
 # Not the most secure way to go
 ssh host-key-verification none
 # Consider using SSH keys for authentication
+
+# Ping the device
+ping
+
+# Send a connection to the device
+connect
+
+# Unlock the device because by default NSO adds them as locked
+state admin-state unlocked
 ````
 
 ### Device Synchronization
@@ -67,9 +76,28 @@ ssh host-key-verification none
 # Check for sync
 devices device ios1 check-sync
 
-# Sync CDB from all inventory devices
+# Sync CDB from all inventory devices by fetching their configuration
 devices sync-from
 ```
+
+### Device Groups
+
+````
+# Use device groups to make working with the inventory more efficient.
+# Groups are logical tags.
+devices device-group SPOKES
+device-name rtr01
+device-name rtr02
+
+# Group that captures all devices.
+devices device-group ALL
+device-group SPOKES
+device-group HUBS
+<etc>
+
+# Check sync
+devices device-group ALL check-sync
+````
 
 ## Configuration
 
