@@ -202,6 +202,36 @@ revert
 
 ## Device Operational State
 
+### Configuration DB
+
+Reads from NSO's configuration DB.
+
+```
+show devices device dist-sw01 platform
+show devices device dist-sw01 platform serial-number
+# Remember that wildcard works
+show devices device * platform serial-number
+show devices device * platform version
+```
+
+### Live Status
+
+Reads directly for the device as it runs.
+
+````
+# NED supported commands
+show devices device dist-sw01 live-status port-channel
+show devices device dist-sw01 live-status ip route
+
+# Raw commands using exec flag
+devices device dist-sw01 live-status exec show license usage
+devices device dist-sw01 live-status exec any dir
+# Pipe the output to a file on the OS
+devices device dist* live-status exec show license usage | save /tmp/output.txt
+````
+
+## Configuration Compliance
+
 
 
 ## Services
