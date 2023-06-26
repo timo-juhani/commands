@@ -145,6 +145,65 @@ commit dry-run outformat native
 commit
 ```
 
+## Rollback Changes
+
+````
+# See the rollback for last configuration update
+show configuration rollback changes
+# Load the rollback
+rollback configuration
+# Verify the intended rollback
+show configuration
+# Verify the commands that will be sent to the device
+commit dry-run outformat native
+# Rollback
+commit
+````
+
+## Templates
+
+Devices can be managed individually using NSO as a super-CLI but using templates
+multiple devices can be managed at same time using a shared template.
+
+### Create
+
+````
+# Create a template using a correct NED
+# NOTE: If the template must support multiple OS types just add another ned-id
+# and punch in the configuration. 
+devices template SET-DNS-SERVER
+ned-id cisco-nx-cli-5.20
+config
+# Add configuration items (OpenDNS servers)
+ip name-server servers 208.67.222.222
+ip name-server servers 208.67.220.220
+# Check on the changes
+show configuration
+# Save the changes
+commit
+````
+
+### Apply
+
+````
+# List the devices
+show devices list
+# Apply the template on the target device
+devices device dist-sw01 apply-template template-name SET-DNS-SERVER
+# Or apply using device group
+devices device-group ALL apply-template template-name SET-DNS-SERVER
+# Perform the pre-commit SOP
+show configuration
+commit dry-run outformat native
+commit
+# If the commit doesn't look good revert the staged changes with
+revert
+````
+
+## Device Operational State
+
+
+
 ## Services
 
 ### Packages
