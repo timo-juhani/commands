@@ -267,19 +267,21 @@ compliance reports report COMPLIANCE-CHECK run outformat text
 
 ## Services
 
-### Packages
+Service is a configuration engine that uses templates and variables to render 
+configurations that can be repeatedly applied. Services are divided to customer 
+facing and resource facing. The former is what is exposed to the user and the 
+latter is called and executed against the device. 
+
+### Create a Service Package
+
+NSO uses YANG to define the variable names and constraints on those variables.
+NSO uses XML behind the scenes to represent every device's configuration.
 
 ```
-# Creating a package
-cd ~/packages
-ncs-make-package --service-skeleton template simple-service
-cp ~/src/simple-service.yang ~/packages/simple-service/src/yang/simple-service.yang 
-cp ~/src/template.xml ~/packages/simple-service/templates/simple-service-template.xml 
-make -C ~/packages/simple-service/src
-echo "request packages reload" | ncs_cli -u admin
-
-# Check package status
-show packages package oper-status
+cd nso-instance/packages/
+ls
+ncs-make-package -h
+ncs-make-package --service-skeleton template loopback-service
 ```
 
 ### Service Configuration
@@ -297,8 +299,6 @@ simple-service test1 re-deploy
 # Delete the service
 no simple-service test1
 ```
-
-## Templates
 
 ### Variable syntax
 
