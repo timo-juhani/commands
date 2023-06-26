@@ -232,7 +232,38 @@ devices device dist* live-status exec show license usage | save /tmp/output.txt
 
 ## Configuration Compliance
 
+Goals:
+- Build a device template that contains the desired configuration to test.
+- Build a compliance report to check the configuration against a template.
 
+Notes:
+- Results support HTML, Bash, or XML format. XML is the default.
+- NSO saves the results to a file located in the folder state/compliance-reports
+- NSO runs a web server so these reports are available.
+
+````
+# Create the device template for compliancy check
+devices template COMPLIANCE-CHECK
+ned-id cisco-ios-cli-6.67
+config
+ip name-server name-server-list 208.67.222.222
+ip name-server name-server-list 208.67.220.220
+service timestamps log datetime localtime show-timezone year
+logging host ipv4 10.225.1.11
+ntp server peer-list 10.225.1.11
+
+# Create the compliancy check
+compliance reports report COMPLIANCE-CHECK
+compare-template COMPLIANCE-CHECK ALL
+commit
+
+# Run the compliancy check
+compliance reports report COMPLIANCE-CHECK run
+# And define outformat if needed (text, html, xml)
+compliance reports report COMPLIANCE-CHECK run outformat text
+
+# Resolve the compliancy issues by applying the template to devices.
+````
 
 ## Services
 
