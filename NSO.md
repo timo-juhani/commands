@@ -230,6 +230,20 @@ devices device dist-sw01 live-status exec any dir
 devices device dist* live-status exec show license usage | save /tmp/output.txt
 ````
 
+### XPath
+
+Finding XPath's can be done using NSO's show commands.
+
+````
+# Native 
+devices device r1 config interface GigabitEthernet 0/1 ipv4 address | display xpath
+show running-config devices device edge-sw01 config vlan | display xpath
+# Developer Tools
+devtools true
+xpath eval /devices/device[name='internet-rtr01']/config/interface/Loopback
+
+````
+
 ## Configuration Compliance
 
 Goals:
@@ -303,10 +317,10 @@ Copy text between config tags only and paste it to the .xml template file
 created during ncs-make-package.
 
 Add variable tags to the template and append YANG variables with each variable
-tag and data type.
+tag and data type. Parameter names must match those modeled with YANG.
 
 ````
-<secret>{./secret}</secret>
+<secret>{/secret}</secret>
 ````
 
 Exit NSO session and then:
