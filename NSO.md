@@ -284,7 +284,47 @@ ncs-make-package -h
 ncs-make-package --service-skeleton template loopback-service
 ```
 
-### Service Configuration
+### Create XML Configuration Template
+
+SOP Alpha: Use NSO (NED) device config mode to create the XML.
+
+````
+show configuration
+commit dry-run outformat xml
+````
+
+SOP Bravo: Use NSO to pull native device configuration in XML format. 
+
+```
+show full-configuration devices device ios1 config | display xml
+```
+
+Copy text between config tags only and paste it to the .xml template file 
+created during ncs-make-package.
+
+Add variable tags to the template and append YANG variables with each variable
+tag and data type.
+
+````
+<secret>{./secret}</secret>
+````
+
+Exit NSO session and then:
+
+```
+cd loopback-service/src/
+make
+```
+
+Enter NSO and reload packages.
+
+```
+ncs_cli -C -u admin
+packages reload
+```
+
+
+### Create a Service Instance
 
 ```
 # Configure a service on a device
@@ -299,7 +339,3 @@ simple-service test1 re-deploy
 # Delete the service
 no simple-service test1
 ```
-
-### Variable syntax
-
-<secret>{./secret}</secret>
