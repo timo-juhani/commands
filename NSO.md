@@ -36,6 +36,24 @@ end
 exit
 ```
 
+## Re-launch NSO
+
+After rebooting the host NSO must be relaunched.
+
+````
+# Check NSO status (it's shouldn't be active)
+ncs —status | grep status
+
+# Run ncscrc
+source ~/nso/ncsrc
+
+# Launch the NSO
+cd ~/nso-dev
+ncs
+
+# Check the status again
+````
+
 ## Devices
 
 ### Authentication Credentials
