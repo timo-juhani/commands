@@ -36,6 +36,26 @@ end
 exit
 ```
 
+## Launch NSO in Project Development Mode
+
+````
+ncs-project create test-project
+cd test-project
+
+# Use Git!
+git init
+
+# Ignore all unimportant files from the repo
+printf '*\n!.gitignore' | tee ncs-cdb/.gitignore state/.gitignore logs/.gitignore
+
+# Ignore all make files from the repo
+echo "setup.mk*" >> .gitignore
+
+# First commit
+git add -A
+git commit -m "first commit"
+````
+
 ## Re-launch NSO
 
 After rebooting the host NSO must be relaunched.
