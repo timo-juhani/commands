@@ -1,4 +1,4 @@
-# NSO
+# Network Services Orchestrator (NSO)
 
 ## Installation
 
