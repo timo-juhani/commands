@@ -1,0 +1,74 @@
+module vlan {
+  namespace "http://lab/example/vlan";
+  prefix vlan;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  description "VLAN service";
+
+  revision 2023-10-05 {
+    description "lab revision";
+  }
+
+  augment /ncs:services {
+    list vlan {
+      tailf:info "VLAN service";
+      key name;
+      unique vlan-id;
+
+      uses ncs:service-data;
+      ncs:servicepoint "vlan";
+
+      leaf name {
+        tailf:info "VLAN service instance name";
+        type string;
+      }
+
+      leaf vlan-id {
+        tailf:info "VLAN ID (must be unique).";
+        type uint32 {
+          range "1..4096";
+        }
+      }
+
+      list device {
+        tailf:info "Device name";
+        key name;
+
+        leaf name {
+          tailf:info "Device name";
+          type leafref {
+            path "/ncs:devices/ncs:device/ncs:name";
+          }
+        }
+
+        list interface {
+          tailf:info "Interface";
+          key "intf-type intf-id";
+
+          leaf intf-type {
+            tailf:info "Inteface type (e.g. Ethernet)";
+            type enumeration {
+              enum GigabitEthernet;
+              enum Ethernet;
+            }
+          }
+
+          leaf intf-id {
+            tailf:info "Inteface ID (e.g. 0/0/0)";
+            type string;
+          }
+        }
+
+      }
+    }
+  }
+}
