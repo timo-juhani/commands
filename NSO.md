@@ -2,19 +2,78 @@
 
 ## Installation
 
+### System
+
 ````
 # Unpack Linux binary
 sh nso.bin
 
 # Create a NSO instance (local setup)
 source ~/nso/ncsrc
+
+# Set env variables
+vim .bashrc
+source ~/nso-5.8/ncsrc # add to .bashrc
+source .bashrc
+
+# Verify NSO is on path
+echo $PATH
+
+# Run NCS setup to create a running directory
+ncs-setup --dest ~/nso-run
+
+# Or with NEDs
 ncs-setup \
 --package nso/packages/neds/cisco-nx-cli-5.23 \
 --package nso/packages/neds/cisco-asa-cli-6.6 \
 --package nso/packages/neds/cisco-ios-cli-6.91 \
 --package nso/packages/neds/cisco-iosxr-cli-7.45 \
---dest nso-instance
-cd ~/nso-instance
+--dest nso-run
+cd ~/nso-run
+````
+
+### NEDs
+
+NEDs are distributed as compressed tar files (.tar.gz). 
+NEDs are Cisco NSO packages. Cisco NSO expects to find packages in the packages 
+subdirectory of the running directory:
+- Do not store anything else in the packages directory.
+- Do not keep old packages in the packages directory. 
+- You might need to recompile packages that were made for different versions of 
+  Cisco NSO.
+
+````
+cp -r $HOME/neds/* packages/
+cd cisco-ios-cli-6.85/src
+make all
+# If need for re-compiling
+make clean
+make all
+
+# A succesful compilation reports BUILD SUCCESSFUL
+
+# Enter NSO CLI
+ncs_cli -u admin -C
+packages reload
+
+# Or when NSO is updated launch NSO with 
+ncs --with-package-reload
+
+# Verify NED installation
+show packages package package-version
+````
+
+## Netsim
+
+````
+# Create simulated network
+ncs-netsim --help
+ncs-netsim create-network <NcsPackage > <NumDevices> <Prefix>
+ncs-netsim create-network $HOME/neds/cisco-ios-cli-6.85 3 c
+ncs-netsim start
+
+# Enter device configuration mode
+ncs-netsim cli-c c1
 ````
 
 ## Launch NSO
@@ -72,6 +131,13 @@ cd ~/nso-dev
 ncs
 
 # Check the status again
+````
+
+## Stop or Reset NSO
+
+````
+ncs --stop
+ncs-setup --reset
 ````
 
 ## Devices
@@ -335,6 +401,15 @@ ls
 ncs-make-package -h
 ncs-make-package --service-skeleton template loopback-service
 ```
+
+### Create YANG Model
+
+````
+# Confirm the model is correct. 
+# NOTE: This may produce a long list of errors not related to the package being
+# developed. Those can be ignored.
+pyang looback.yang
+````
 
 ### Create XML Configuration Template
 
