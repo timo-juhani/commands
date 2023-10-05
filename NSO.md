@@ -409,6 +409,14 @@ ncs-make-package --service-skeleton template loopback-service
 # NOTE: This may produce a long list of errors not related to the package being
 # developed. Those can be ignored.
 pyang looback.yang
+
+# Make 
+cd ~/nso-run/packages/loopback/src 
+make
+
+# Reload package in NSO
+# Required every time there is a change in YANG model 
+packages reload
 ````
 
 ### Create XML Configuration Template
