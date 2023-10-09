@@ -1,0 +1,109 @@
+module l3vpn {
+  namespace "http://lab/example/l3vpn";
+  prefix l3vpn;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  augment /ncs:services {
+    list l3vpn {
+      tailf:info "L3VPN service";
+      key vpn-name;
+
+      uses ncs:service-data;
+      ncs:servicepoint "l3vpn";
+
+      leaf vpn-name {
+        tailf:info "L3VPN service instance name";
+        type string;
+      }
+
+      leaf vpn-id {
+        tailf:info "L3VPN service instance ID";
+        type uint32 {
+          range "10001..19999";
+        }
+      }
+
+      leaf customer {
+        tailf:info "L3VPN customer";
+        type leafref {
+          path "/ncs:customers/ncs:customer/ncs:id";
+        }
+      }
+
+      // Each VPN service instance shall have one or multiple interfaces.
+
+      list link {
+        tailf:info "PE-CE interface";
+        key link-id;
+        unique "pe-device interface"; 
+
+        leaf link-id {
+          tailf:info "Link ID";
+          type uint32 {
+            range "2..255";
+          }
+        }
+
+        leaf link-name {
+          tailf:info "Link name";
+          type string;
+        }
+
+        leaf pe-device {
+          type leafref {
+            path "/ncs:devices/ncs:device/ncs:name";
+          }
+          must "starts-with(current(), 'core')" {
+            error-message "Only PE devices can be selected.";
+          }
+        }
+
+        leaf interface {
+          tailf:info "Customer facing interface";
+          type string;
+        }
+
+        leaf routing-protocol {
+          tailf:info "Routing protocol for PE-CE link";
+          type enumeration {
+            enum bgp;
+            enum static;
+          }
+        }
+
+        leaf neighbor {
+          tailf:info "Neighboring PE";
+          type inet:ipv4-address;
+        }
+
+        list static-route {
+          tailf:info "Static route";
+          key prefix;
+          when "../routing-protocol = 'static'";
+
+          leaf prefix {
+            tailf:info "Static route prefix";
+            type inet:ipv4-address;
+          }
+
+          leaf mask {
+            tailf:info "Subnet mask";
+            type union {
+              type inet:ipv4-address;
+              type inet:ipv4-prefix;
+            }
+          }
+        }
+      }
+    }
+  }
+}

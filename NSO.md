@@ -6,7 +6,7 @@
 
 ````
 # Unpack Linux binary
-sh nso.bin
+sh nso-6.0.linux.x86_64.installer.bin --local-install ~/nso-6.0
 
 # Create a NSO instance (local setup)
 source ~/nso/ncsrc
@@ -62,7 +62,7 @@ ncs --with-package-reload
 # Verify NED installation
 show packages package package-version
 ````
-
+cl
 ## Netsim
 
 ````
@@ -70,10 +70,18 @@ show packages package package-version
 ncs-netsim --help
 ncs-netsim create-network <NcsPackage > <NumDevices> <Prefix>
 ncs-netsim create-network $HOME/neds/cisco-ios-cli-6.85 3 c
+ncs-netsim add-to-network neds/cisco-ios-cli-6.85 3 c
 ncs-netsim start
+
+# If NSO is already running or has been prior launched import the devices to
+# the inventory manually.
+ncs-netsim ncs-xml-init > devices.xml
 
 # Enter device configuration mode
 ncs-netsim cli-c c1
+
+# Load devices to a running NSO
+ncs_load -l -m devices.xml
 ````
 
 ## Launch NSO
@@ -155,13 +163,15 @@ default-map remote-secondary-password cisco
 
 ### Add Devices
 
+#### Real Device
+
 ````
 # Name the device
 devices device edge-sw01
 # Management IP address 
 address 10.10.20.172
 # Authentication credentials
-authgroup labadmin
+authgroup labadmssccin
 # NED type
 device-type cli ned-id cisco-ios-cli-6.67
 # Remote command protocol
@@ -178,6 +188,28 @@ connect
 
 # Unlock the device because by default NSO adds them as locked
 state admin-state unlocked
+````
+
+#### NETSIM Device
+
+````
+# Check which ports are used by NETSIM devices
+ncs-netsim list
+
+# If using default authgroup login as admin
+ncs_cli -C -u admin
+
+# Add a NETSIM device
+config
+devices device mydevice
+address 127.0.0.1 port 10022
+device-type cli ned-id cisco-ios protocol ssh
+authgroup default
+state admin-state unlocked
+commit
+ssh fetch-host-keys
+sync-from
+end
 ````
 
 ### Device Synchronization
@@ -462,6 +494,13 @@ packages reload
 ### Create a Service Instance
 
 ```
+# Create a customer if it's not there already
+config
+customers customer ACME
+```
+
+```
+# General flow example
 # Configure a service on a device
 simple-service test1 device ios0 secret mypasswd
 
@@ -474,3 +513,24 @@ simple-service test1 re-deploy
 # Delete the service
 no simple-service test1
 ```
+
+````
+# L3VPN example
+services l3vpn ACME vpn-id 10001
+customer ACME
+link 2 link-name Site1 pe-device PE11 interface 0/1 routing-protocol bgp neighbor 172.16.1.1
+exit
+
+link 3 link-name Site3 pe-device PE31 interface 0/1 routing-protocol static
+static-route 192.168.1.0 mask 255.255.255.0
+exit
+static-route 192.168.2.0 mask 255.255.255.0
+````
+
+````
+# Check the current running config of a service in table format
+show running-config services l3vpn | tab
+
+# And in XPATH
+show running-config services l3vpn ACME | display xpath
+````
