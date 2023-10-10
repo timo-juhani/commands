@@ -431,7 +431,12 @@ NSO uses XML behind the scenes to represent every device's configuration.
 cd nso-instance/packages/
 ls
 ncs-make-package -h
+
+# Template used with static variables.
 ncs-make-package --service-skeleton template loopback-service
+
+# Python & template used when dynamic variables are required.
+ncs-make-package --service-skeleton python-and-template svi
 ```
 
 ### Create YANG Model
@@ -535,12 +540,18 @@ services l3mplsvpn S1 check-sync
 # Checks the sync from device itself (remote)
 services l3mplsvpn S1 deep-check-sync
 
-# Get service modifications
-simple-service test1 get-modifications
-
 # Redeploy a service if changes were made manually after deploying the service
 simple-service test1 re-deploy
 
+# Undeploy from devices but keep in NSO CDB
+simple-service test1 un-deploy
+
 # Delete the service
 no simple-service test1
+
+# Get service modifications
+simple-service test1 get-modifications
+
+# Compare device configuration to configuration in NSO CDB
+simple-service test1 compare-config
 ````

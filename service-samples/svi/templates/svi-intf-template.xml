@@ -1,0 +1,29 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+      <!-- DEVICE -->
+      <name>{/device/name}</name>
+      <config>
+
+      <!-- IOS AND IOS-XE TEMPLATE-->
+      
+        <interface xmlns="urn:ios">
+          <?if {string(name)=$SVI-DEVICE}?>
+            <Vlan>
+              <name>{$VLAN-ID}</name>
+              <ip>
+                <address>
+                  <primary>
+                    <address>{$IP-ADDR}</address>
+                    <mask>{$NETMASK}</mask>
+                  </primary>
+                </address>
+              </ip>
+            </Vlan>
+          <?end?>
+        </interface>
+
+      </config>
+    </device>
+  </devices>
+</config-template>

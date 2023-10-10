@@ -1,0 +1,79 @@
+module svi {
+  namespace "http://lab/example/svi";
+  prefix svi;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  description "SVI service package (Python)";
+
+  revision 2023-10-10 {
+    description
+      "Initial revision.";
+  }
+
+  augment /ncs:services {
+    list svi {
+      tailf:info "SVI service (Python)";
+      key name;
+      
+      leaf name {
+        tailf:info "Unique service id";
+        tailf:cli-allow-range;
+        type string;
+      }
+
+      uses ncs:service-data;
+      ncs:servicepoint svi-servicepoint;
+
+      leaf vlan-id {
+        tailf:info "Unique VLAN ID";
+        type uint32 {
+          range "1..4096";
+        }
+      }
+
+      list device {
+        tailf:info "Switch";
+        key name;
+
+        leaf name {
+          tailf:info "Device name";
+          type leafref {
+            path "/ncs:devices/ncs:device/ncs:name";
+          }
+        }
+
+        leaf ip-prefix {
+          tailf:info "Unique IPv4 prefix for SVI";
+          type inet:ip-prefix;
+        }
+
+        list interface {
+          tailf:info "Switch interface";
+          key "intf-type intf-id";
+
+          leaf intf-type {
+            tailf:info "Interface type";
+            type enumeration {
+              enum Ethernet;
+              enum GigabitEthernet;
+            }
+          }
+
+          leaf intf-id {
+            tailf:info "Inteface ID";
+            type string;
+          }
+        }
+      }
+    }
+  }
+}

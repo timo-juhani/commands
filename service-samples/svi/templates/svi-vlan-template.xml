@@ -1,0 +1,51 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+      <!-- DEVICE -->
+      <name>{/device/name}</name>
+      <config>
+
+      <!-- IOS AND IOS-XE TEMPLATE-->
+      
+        <vlan xmlns="urn:ios">
+          <vlan-list>
+            <id>{$VLAN-ID}</id>
+          </vlan-list>
+        </vlan>
+
+        <?foreach {interface}?>
+          <interface xmlns="urn:ios">
+            <?if {intf-type='Ethernet'}?>
+              <Ethernet>
+                <name>{intf-id}</name>
+                <switchport>
+                  <mode>
+                    <access/>
+                  </mode>
+                  <access>
+                    <vlan>{$VLAN-ID}</vlan>
+                  </access>
+                </switchport>
+              </Ethernet>
+            <?end?>
+            <?if {intf-type='GigabitEthernet'}?>
+              <GigabitEthernet>
+                <name>{intf-id}</name>
+                <switchport>
+                  <mode>
+                    <access/>
+                  </mode>
+                  <access>
+                    <vlan>{$VLAN-ID}</vlan>
+                  </access>
+                </switchport>
+              </GigabitEthernet>
+            <?end?>
+
+          </interface>
+        <?end?>
+
+      </config>
+    </device>
+  </devices>
+</config-template>

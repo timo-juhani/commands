@@ -1,3 +1,4 @@
+# -*- mode: python; python-indent: 4 -*-
 import argparse
 import ncs
 
