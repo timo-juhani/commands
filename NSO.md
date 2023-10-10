@@ -478,7 +478,11 @@ Add variable tags to the template and append YANG variables with each variable
 tag and data type. Parameter names must match those modeled with YANG.
 
 ````
+# Static variable
 <secret>{/secret}</secret>
+
+# Python based variable
+<ip>{$IP-ADDR}</ip>
 ````
 
 Exit NSO session and then:
@@ -554,4 +558,9 @@ simple-service test1 get-modifications
 
 # Compare device configuration to configuration in NSO CDB
 simple-service test1 compare-config
+````
+
+````
+# Debug Python code
+tail -n 20 ~/nso-run/logs/ncs-python-vm-svi.log
 ````
