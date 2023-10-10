@@ -503,15 +503,6 @@ customers customer ACME
 # General flow example
 # Configure a service on a device
 simple-service test1 device ios0 secret mypasswd
-
-# Get service modifications
-simple-service test1 get-modifications
-
-# Redeploy a service if changes were made manually after deploying the service
-simple-service test1 re-deploy
-
-# Delete the service
-no simple-service test1
 ```
 
 ````
@@ -533,4 +524,23 @@ show running-config services l3vpn | tab
 
 # And in XPATH
 show running-config services l3vpn ACME | display xpath
+````
+
+### Service Instance Management
+
+````
+# Checks the sync from NSO CDB
+services l3mplsvpn S1 check-sync
+
+# Checks the sync from device itself (remote)
+services l3mplsvpn S1 deep-check-sync
+
+# Get service modifications
+simple-service test1 get-modifications
+
+# Redeploy a service if changes were made manually after deploying the service
+simple-service test1 re-deploy
+
+# Delete the service
+no simple-service test1
 ````
